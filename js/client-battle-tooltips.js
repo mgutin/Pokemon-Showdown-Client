@@ -99,48 +99,48 @@ var BattleTooltips = (function () {
 	BattleTooltips.prototype.tooltipAttrs = function (thing, type, ownHeight) {
 		var roomid = this.room.id;
 		return ' onclick="BattleTooltips._handleClickFor(event)"' +
-		' ontouchstart="BattleTooltips._handleTouchStartFor(event, \'' + roomid + '\', \'' + Tools.escapeHTML('' + thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ')"' +
-		' ontouchend="BattleTooltips._handleTouchEndFor(event, this)"' +
-		' ontouchleave="BattleTooltips._handleTouchLeaveFor(event)"' +
-		' ontouchcancel="BattleTooltips._handleTouchLeaveFor(event)"' +
-		' onmouseover="BattleTooltips.showTooltipFor(\'' + roomid + '\', \'' + Tools.escapeHTML('' + thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ')"' +
-		' onfocus="BattleTooltips.showTooltipFor(\'' + roomid + '\', \'' + Tools.escapeHTML('' + thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ')"' +
-		' onmouseout="BattleTooltips.hideTooltip()"' +
-		' onblur="BattleTooltips.hideTooltip()"' +
-		' onmouseup="BattleTooltips._handleMouseUpFor()"' +
-		' aria-describedby="tooltipwrapper"';
+			' ontouchstart="BattleTooltips._handleTouchStartFor(event, \'' + roomid + '\', \'' + Tools.escapeHTML('' + thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ')"' +
+			' ontouchend="BattleTooltips._handleTouchEndFor(event, this)"' +
+			' ontouchleave="BattleTooltips._handleTouchLeaveFor(event)"' +
+			' ontouchcancel="BattleTooltips._handleTouchLeaveFor(event)"' +
+			' onmouseover="BattleTooltips.showTooltipFor(\'' + roomid + '\', \'' + Tools.escapeHTML('' + thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ')"' +
+			' onfocus="BattleTooltips.showTooltipFor(\'' + roomid + '\', \'' + Tools.escapeHTML('' + thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ')"' +
+			' onmouseout="BattleTooltips.hideTooltip()"' +
+			' onblur="BattleTooltips.hideTooltip()"' +
+			' onmouseup="BattleTooltips._handleMouseUpFor()"' +
+			' aria-describedby="tooltipwrapper"';
 	};
 	BattleTooltips.prototype.showTooltip = function (thing, type, elem, ownHeight) {
 		var room = this.room;
 
 		var text = '';
 		switch (type) {
-		case 'move':
-		case 'zmove':
-			var move = Tools.getMove(thing);
-			if (!move) return;
-			text = this.showMoveTooltip(move, type === 'zmove');
-			break;
+			case 'move':
+			case 'zmove':
+				var move = Tools.getMove(thing);
+				if (!move) return;
+				text = this.showMoveTooltip(move, type === 'zmove');
+				break;
 
-		case 'pokemon':
-			var side = room.battle[thing.slice(0, -1) + "Side"];
-			var pokemon = side.active[thing.slice(-1)];
-			if (!pokemon) return;
+			case 'pokemon':
+				var side = room.battle[thing.slice(0, -1) + "Side"];
+				var pokemon = side.active[thing.slice(-1)];
+				if (!pokemon) return;
 			/* falls through */
-		case 'sidepokemon':
-			var pokemonData;
-			var isActive = (type === 'pokemon');
-			if (room.myPokemon) {
-				if (!pokemon) {
-					pokemonData = room.myPokemon[parseInt(thing, 10)];
-					pokemon = pokemonData;
-				} else if (room.controlsShown && pokemon.side === room.battle.mySide) {
-					// battlePokemon = pokemon;
-					pokemonData = room.myPokemon[pokemon.slot];
+			case 'sidepokemon':
+				var pokemonData;
+				var isActive = (type === 'pokemon');
+				if (room.myPokemon) {
+					if (!pokemon) {
+						pokemonData = room.myPokemon[parseInt(thing, 10)];
+						pokemon = pokemonData;
+					} else if (room.controlsShown && pokemon.side === room.battle.mySide) {
+						// battlePokemon = pokemon;
+						pokemonData = room.myPokemon[pokemon.slot];
+					}
 				}
-			}
-			text = this.showPokemonTooltip(pokemon, pokemonData, isActive);
-			break;
+				text = this.showPokemonTooltip(pokemon, pokemonData, isActive);
+				break;
 		}
 
 		var offset = {
@@ -383,7 +383,7 @@ var BattleTooltips = (function () {
 		text = '<div class="tooltipinner"><div class="tooltip">';
 		text += '<h2>' + pokemon.getFullName() + gender + (pokemon.level !== 100 ? ' <small>L' + pokemon.level + '</small>' : '') + '<br />';
 
-		var template = Tools.getTemplate(pokemon.getSpecies());
+		var template = Tools.getTemplate(pokemon.species);
 		if (pokemon.volatiles && pokemon.volatiles.formechange) {
 			if (pokemon.volatiles.transform) {
 				text += '<small>(Transformed into ' + pokemon.volatiles.formechange[2] + ')</small><br />';
@@ -744,7 +744,7 @@ var BattleTooltips = (function () {
 	BattleTooltips.prototype.makeModifiedStatText = function (pokemonData, modifiedStats) {
 		var statsText = '<p>';
 		var statTable = {atk: '&nbsp;Atk /&nbsp;', def: '&nbsp;Def /&nbsp;', spa: '&nbsp;SpA /&nbsp;',
-						 spc: '&nbsp;Spc /&nbsp;', spd: '&nbsp;SpD /&nbsp;', spe: '&nbsp;Spe</p>'};
+			spc: '&nbsp;Spc /&nbsp;', spd: '&nbsp;SpD /&nbsp;', spe: '&nbsp;Spe</p>'};
 		statsText += this.boldModifiedStat(pokemonData, modifiedStats, 'atk') + statTable['atk'];
 		statsText += this.boldModifiedStat(pokemonData, modifiedStats, 'def') + statTable['def'];
 		statsText += this.boldModifiedStat(pokemonData, modifiedStats, 'spa');
