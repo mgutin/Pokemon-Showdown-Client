@@ -5,6 +5,11 @@ var resultLocations = [[], []];
 function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 	if (room === "" || pokemonDefender === "")
 		return null;
+	room = jQuery.extend(true, {}, room);
+	pokemonDefender = jQuery.extend(true, {}, pokemonDefender);
+	if(notActivePokemon !== undefined)
+		notActivePokemon = jQuery.extend(true, {}, notActivePokemon);
+
 	var allPokemon = room.myPokemon;
 	var pokemonAttacker = notActivePokemon;
 	if (notActivePokemon === undefined)
@@ -30,10 +35,13 @@ function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 	if (sideConditionsY["lightscreen"] !== undefined)
 		field.isReflect = [true,field.isReflect[1]];
 
-	if (room.battle.weather.includes("rain"))
-		field.weather = ['rain'];
-	if (room.battle.weather.includes("sand"))
-		field.weather = ['sand'];
+	//TODO weather, Sun, Harsh Sunshine, Hail
+	field.weather = weather(room.battle.weather);
+	// if (room.battle.weather.includes("rain"))
+	// 	field.weather = ['Rain'];
+	// if (room.battle.weather.includes("sand"))
+	// 	field.weather = ['Sand'];
+	//TODO terain, field.terrain = "Grassy"
 	var psuedoWeather = room.battle.pseudoWeather;
 	var isTrickRoom = false;
 	for(var i = 0; i<psuedoWeather.length; i++)
@@ -93,6 +101,54 @@ function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 	if (d === 0)
 		return "";
 	return d;
+}
+function weather(weatherValue) {
+	var weatherTable = {
+		sunnyday: {
+			name: 'Sun',
+			startMessage: 'The sunlight turned harsh!',
+			abilityMessage: "'s Drought intensified the sun's rays!",
+			//upkeepMessage: 'The sunlight is strong!',
+			endMessage: "The sunlight faded." },
+
+		desolateland: {
+			name: "Harsh Sunshine",
+			startMessage: "The sunlight turned extremely harsh!",
+			endMessage: "The harsh sunlight faded." },
+
+		raindance: {
+			name: 'Rain',
+			startMessage: 'It started to rain!',
+			abilityMessage: "'s Drizzle made it rain!",
+			//upkeepMessage: 'Rain continues to fall!',
+			endMessage: 'The rain stopped.' },
+
+		primordialsea: {
+			name: "Heavy Rain",
+			startMessage: "A heavy rain began to fall!",
+			endMessage: "The heavy rain has lifted!" },
+
+		sandstorm: {
+			name: 'Sandstorm',
+			startMessage: 'A sandstorm kicked up!',
+			abilityMessage: "'s Sand Stream whipped up a sandstorm!",
+			upkeepMessage: 'The sandstorm is raging.',
+			endMessage: 'The sandstorm subsided.' },
+
+		hail: {
+			name: 'Hail',
+			startMessage: 'It started to hail!',
+			abilityMessage: "'s Snow Warning whipped up a hailstorm!",
+			upkeepMessage: 'The hail is crashing down.',
+			endMessage: 'The hail stopped.' },
+
+		deltastream: {
+			name: 'Strong Winds',
+			startMessage: 'Mysterious strong winds are protecting Flying-type Pok&eacute;mon!',
+			endMessage: 'The mysterious strong winds have dissipated!' } };
+	if(weatherTable[weatherValue]===undefined)
+		return "";
+	return weatherTable[weatherValue].name;
 }
 
 function getWarnMessage(room, pokemonDefender, notActivePokemon) {
@@ -215,8 +271,9 @@ function POKEMONValue(pMon) {
 
 	// var setName = pokeInfo.substring(pokeInfo.indexOf("(") + 1, pokeInfo.lastIndexOf(")"));
 	var types = [this.pokemon.t1,this.pokemon.t2];
-	if(pMon.types !== undefined)
-		types = pMon.types;
+	//TODO not sure when to use this vs above like plated arceus or something???
+	// if(pMon.types !== undefined)
+	// 	types = pMon.types;
 	this.type1 = types[0];
 	this.type2 = (types[1] && types[1] !== "undefined") ? types[1] : "";
 	this.rawStats = [];
@@ -274,7 +331,7 @@ function POKEMONValue(pMon) {
 			(this.pokemon.ab && typeof this.pokemon.ab !== "undefined") ? this.pokemon.ab : "";
 	if(this.item === undefined || this.item === "")
 		this.item = (this.curSet.item && typeof this.curSet.item !== "undefined" && (this.curSet.item === "Eviolite" || this.curSet.item.indexOf("ite") < 0)) ? this.curSet.item : "";
-	this.status = pMon.status === "" ? "Healthy" : pMon.status;
+	this.status = statuses(pMon.status);
 	this.toxicCounter = 0;
 	this.mymoves = [];
 	if (this.moves !== undefined) {
@@ -318,6 +375,22 @@ function POKEMONValue(pMon) {
 			return this.type1 === type || this.type2 === type;
 		};
 	}
+}
+function statuses(status) {
+	if (status === 'brn') {
+		return "Burned";
+	} else if (status === 'psn') {
+		return "Poisoned"
+	} else if (status === 'tox') {
+		return "Badly Poisoned";
+	} else if (status === 'slp') {
+		return "Asleep";
+	} else if (status === 'par') {
+		return "Paralyzed";
+	} else if (status === 'frz') {
+		return "Frozen";
+	}else
+		return "Healthy";
 }
 function calculateDamage(pokemonLeft, pokemonRight, field) {
 	var p1 = pokemonLeft;//new Pokemon($("#p1"));
@@ -527,9 +600,9 @@ function Field() {
 	this.spikes;
 	if (gen === 2) {
 		this.spikes = [0, 0];//[$("#gscSpikesL").prop("checked") ? 1 : 0, $("#gscSpikesR").prop("checked") ? 1 : 0];
-		this.weather = [];//$("input:radio[name='gscWeather']:checked").val();
+		this.weather = "";//$("input:radio[name='gscWeather']:checked").val();
 	} else {
-		this.weather = [];//$("input:radio[name='weather']:checked").val();
+		this.weather = "";//$("input:radio[name='weather']:checked").val();
 		this.spikes = [false, false];//[~~$("input:radio[name='spikesL']:checked").val(), ~~$("input:radio[name='spikesR']:checked").val()];
 	}
 	this.terrain = "";//($("input:checkbox[name='terrain']:checked").val()) ? $("input:checkbox[name='terrain']:checked").val() : "";

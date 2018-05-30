@@ -600,14 +600,16 @@
 					if (ability === 'solarpower') {
 						stats.spa = Math.floor(stats.spa * 1.5);
 					}
-					var allyActive = pokemon.side.active;
-					if (allyActive.length > 1) {
-						for (var i = 0; i < allyActive.length; i++) {
-							var ally = allyActive[i];
-							if (!ally || ally.fainted) continue;
-							if (ally.ability === 'flowergift' && (ally.baseSpecies === 'Cherrim' || this.battle.gen <= 4)) {
-								stats.atk = Math.floor(stats.atk * 1.5);
-								stats.spd = Math.floor(stats.spd * 1.5);
+					if(pokemon.side) {
+						var allyActive = pokemon.side.active;
+						if (allyActive.length > 1) {
+							for (var i = 0; i < allyActive.length; i++) {
+								var ally = allyActive[i];
+								if (!ally || ally.fainted) continue;
+								if (ally.ability === 'flowergift' && (ally.baseSpecies === 'Cherrim' || this.battle.gen <= 4)) {
+									stats.atk = Math.floor(stats.atk * 1.5);
+									stats.spd = Math.floor(stats.spd * 1.5);
+								}
 							}
 						}
 					}
