@@ -10,7 +10,8 @@ Config.defaultserver = {
 	registered: true
 };
 
-function Storage() {}
+function Storage() {
+}
 
 Storage.initialize = function () {
 	if (window.nodewebkit) {
@@ -40,11 +41,13 @@ Storage.bg = {
 		} else if (bgid) {
 			try {
 				localStorage.setItem('showdown_bg', bgUrl + '\n' + bgid);
-			} catch (e) {}
+			} catch (e) {
+			}
 		} else {
 			try {
 				localStorage.removeItem('showdown_bg');
-			} catch (e) {}
+			} catch (e) {
+			}
 		}
 	},
 	/**
@@ -90,28 +93,28 @@ Storage.bg = {
 
 		if (!hues) {
 			switch (bgid) {
-			case 'horizon':
-				hues = ["318.87640449438203,35.177865612648226%", "216,46.2962962962963%", "221.25,32.25806451612904%", "197.8021978021978,52.60115606936417%", "232.00000000000003,19.480519480519483%", "228.38709677419354,60.7843137254902%"];
-				attrib = '<a href="https://vtas.deviantart.com/art/Pokemon-Horizon-312267168" target="_blank" class="subtle">"Horizon" <small>background by Vivian Zou</small></a>';
-				break;
-			case 'ocean':
-				hues = ["82.8169014084507,34.63414634146342%", "216.16438356164383,29.55465587044534%", "212.92682926829266,59.42028985507245%", "209.18918918918916,57.51295336787566%", "199.2857142857143,48.275862068965495%", "213.11999999999998,55.06607929515419%"];
-				attrib = '<a href="https://quanyails.deviantart.com/art/Sunrise-Ocean-402667154" target="_blank" class="subtle">"Sunrise Ocean" <small>background by Yijing Chen</small></a>';
-				break;
-			case 'waterfall':
-				hues = ["119.31034482758622,37.66233766233767%", "184.36363636363635,23.012552301255226%", "108.92307692307692,37.14285714285714%", "70.34482758620689,20.567375886524818%", "98.39999999999998,36.76470588235296%", "140,38.18181818181818%"];
-				attrib = '<a href="https://yilx.deviantart.com/art/Irie-372292729" target="_blank" class="subtle">"Irie" <small>background by Samuel Teo</small></a>';
-				break;
-			case 'shaymin':
-				hues = ["39.000000000000064,21.7391304347826%", "170.00000000000003,2.380952380952378%", "157.5,11.88118811881188%", "174.78260869565216,12.041884816753928%", "185.00000000000003,12.76595744680851%", "20,5.660377358490567%"];
-				attrib = '<a href="http://cargocollective.com/bluep" target="_blank" class="subtle">"Shaymin" <small>background by Daniel Kong</small></a>';
-				break;
-			case 'charizards':
-				hues = ["37.159090909090914,74.57627118644066%", "10.874999999999998,70.79646017699115%", "179.51612903225808,52.10084033613446%", "20.833333333333336,36.73469387755102%", "192.3076923076923,80.41237113402063%", "210,29.629629629629633%"];
-				attrib = '<a href="https://seiryuuden.deviantart.com/art/The-Ultimate-Mega-Showdown-Charizards-414587079" target="_blank" class="subtle">"Charizards" <small>background by Jessica Valencia</small></a>';
-				break;
-			case 'digimon':
-				hues = ["170.45454545454544,27.500000000000004%", "84.70588235294119,13.821138211382115%", "112.50000000000001,7.8431372549019605%", "217.82608695652175,54.761904761904766%", "0,1.6949152542372816%", ""];
+				case 'horizon':
+					hues = ["318.87640449438203,35.177865612648226%", "216,46.2962962962963%", "221.25,32.25806451612904%", "197.8021978021978,52.60115606936417%", "232.00000000000003,19.480519480519483%", "228.38709677419354,60.7843137254902%"];
+					attrib = '<a href="https://vtas.deviantart.com/art/Pokemon-Horizon-312267168" target="_blank" class="subtle">"Horizon" <small>background by Vivian Zou</small></a>';
+					break;
+				case 'ocean':
+					hues = ["82.8169014084507,34.63414634146342%", "216.16438356164383,29.55465587044534%", "212.92682926829266,59.42028985507245%", "209.18918918918916,57.51295336787566%", "199.2857142857143,48.275862068965495%", "213.11999999999998,55.06607929515419%"];
+					attrib = '<a href="https://quanyails.deviantart.com/art/Sunrise-Ocean-402667154" target="_blank" class="subtle">"Sunrise Ocean" <small>background by Yijing Chen</small></a>';
+					break;
+				case 'waterfall':
+					hues = ["119.31034482758622,37.66233766233767%", "184.36363636363635,23.012552301255226%", "108.92307692307692,37.14285714285714%", "70.34482758620689,20.567375886524818%", "98.39999999999998,36.76470588235296%", "140,38.18181818181818%"];
+					attrib = '<a href="https://yilx.deviantart.com/art/Irie-372292729" target="_blank" class="subtle">"Irie" <small>background by Samuel Teo</small></a>';
+					break;
+				case 'shaymin':
+					hues = ["39.000000000000064,21.7391304347826%", "170.00000000000003,2.380952380952378%", "157.5,11.88118811881188%", "174.78260869565216,12.041884816753928%", "185.00000000000003,12.76595744680851%", "20,5.660377358490567%"];
+					attrib = '<a href="http://cargocollective.com/bluep" target="_blank" class="subtle">"Shaymin" <small>background by Daniel Kong</small></a>';
+					break;
+				case 'charizards':
+					hues = ["37.159090909090914,74.57627118644066%", "10.874999999999998,70.79646017699115%", "179.51612903225808,52.10084033613446%", "20.833333333333336,36.73469387755102%", "192.3076923076923,80.41237113402063%", "210,29.629629629629633%"];
+					attrib = '<a href="https://seiryuuden.deviantart.com/art/The-Ultimate-Mega-Showdown-Charizards-414587079" target="_blank" class="subtle">"Charizards" <small>background by Jessica Valencia</small></a>';
+					break;
+				case 'digimon':
+					hues = ["170.45454545454544,27.500000000000004%", "84.70588235294119,13.821138211382115%", "112.50000000000001,7.8431372549019605%", "217.82608695652175,54.761904761904766%", "0,1.6949152542372816%", ""];
 			}
 		}
 		if (attrib) attrib = '<small style="display:block;padding-bottom:4px">' + attrib + '</small>';
@@ -165,7 +168,8 @@ Storage.bg = {
 				if (!noSave && Storage.bg.changeCount === changeCount) {
 					localStorage.setItem('showdown_bg', bgUrl + '\n' + Storage.bg.id + '\n' + hues.join('\n'));
 				}
-			} catch (e) {}
+			} catch (e) {
+			}
 		};
 		img.src = bgUrl;
 	},
@@ -182,9 +186,15 @@ Storage.bg = {
 			var d = max - min;
 			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 			switch (max) {
-			case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-			case g: h = (b - r) / d + 2; break;
-			case b: h = (r - g) / d + 4; break;
+				case r:
+					h = (g - b) / d + (g < b ? 6 : 0);
+					break;
+				case g:
+					h = (b - r) / d + 2;
+					break;
+				case b:
+					h = (r - g) / d + 4;
+					break;
 			}
 			h /= 6;
 		}
@@ -198,7 +208,8 @@ try {
 		Storage.bg.load(bg[0], bg[1]);
 		if (bg.length >= 7) Storage.bg.loadHues(bg.slice(2));
 	}
-} catch (e) {}
+} catch (e) {
+}
 
 if (!Storage.bg.id) {
 	Storage.bg.load();
@@ -239,12 +250,14 @@ try {
 	if (window.localStorage) {
 		Storage.prefs.data = $.parseJSON(localStorage.getItem('showdown_prefs')) || {};
 	}
-} catch (e) {}
+} catch (e) {
+}
 
 Storage.prefs.save = function () {
 	try {
 		localStorage.setItem('showdown_prefs', $.toJSON(this.data));
-	} catch (e) {}
+	} catch (e) {
+	}
 };
 
 Storage.whenPrefsLoaded = Tools.makeLoadTracker();
@@ -340,99 +353,101 @@ Storage.onMessage = function ($e) {
 	Storage.crossOriginFrame = e.source;
 	var data = e.data;
 	switch (data.charAt(0)) {
-	case 'c':
-		Config.server = $.parseJSON(data.substr(1));
-		if (Config.server.registered && Config.server.id !== 'showdown' && Config.server.id !== 'smogtours') {
-			var $link = $('<link rel="stylesheet" ' +
-				'href="//play.pokemonshowdown.com/customcss.php?server=' +
-				encodeURIComponent(Config.server.id) + '" />');
-			$('head').append($link);
-		}
-		break;
-	case 'p':
-		var newData = $.parseJSON(data.substr(1));
-		if (newData) Storage.prefs.data = newData;
-		Storage.prefs.save = function () {
-			var prefData = $.toJSON(this.data);
-			Storage.postCrossOriginMessage('P' + prefData);
+		case 'c':
+			Config.server = $.parseJSON(data.substr(1));
+			if (Config.server.registered && Config.server.id !== 'showdown' && Config.server.id !== 'smogtours') {
+				var $link = $('<link rel="stylesheet" ' +
+					'href="//play.pokemonshowdown.com/customcss.php?server=' +
+					encodeURIComponent(Config.server.id) + '" />');
+				$('head').append($link);
+			}
+			break;
+		case 'p':
+			var newData = $.parseJSON(data.substr(1));
+			if (newData) Storage.prefs.data = newData;
+			Storage.prefs.save = function () {
+				var prefData = $.toJSON(this.data);
+				Storage.postCrossOriginMessage('P' + prefData);
 
-			// in Safari, cross-origin local storage is apparently treated as session
-			// storage, so mirror the storage in the current origin just in case
-			try {
-				localStorage.setItem('showdown_prefs', prefData);
-			} catch (e) {}
-		};
-		Storage.whenPrefsLoaded.load();
-		break;
-	case 't':
-		if (window.nodewebkit) return;
-		var oldTeams;
-		if (Storage.teams && Storage.teams.length) {
-			// Teams are still stored in the old location; merge them with the
-			// new teams.
-			oldTeams = Storage.teams;
-		}
-		Storage.loadPackedTeams(data.substr(1));
-		Storage.saveTeams = function () {
-			var packedTeams = Storage.packAllTeams(Storage.teams);
-			Storage.postCrossOriginMessage('T' + packedTeams);
-
-			// in Safari, cross-origin local storage is apparently treated as session
-			// storage, so mirror the storage in the current origin just in case
-			if (document.location.hostname === Config.origindomain) {
+				// in Safari, cross-origin local storage is apparently treated as session
+				// storage, so mirror the storage in the current origin just in case
 				try {
-					localStorage.setItem('showdown_teams_local', packedTeams);
-				} catch (e) {}
-			}
-		};
-		if (oldTeams) {
-			Storage.teams = Storage.teams.concat(oldTeams);
-			Storage.saveTeams();
-			localStorage.removeItem('showdown_teams');
-		}
-		if (data === 'tnull' && !Storage.teams.length) {
-			Storage.loadPackedTeams(localStorage.getItem('showdown_teams_local'));
-		}
-		Storage.whenTeamsLoaded.load();
-		break;
-	case 'a':
-		if (data === 'a0') {
-			Storage.noThirdParty = true;
-			Storage.whenTeamsLoaded.load();
+					localStorage.setItem('showdown_prefs', prefData);
+				} catch (e) {
+				}
+			};
 			Storage.whenPrefsLoaded.load();
-		}
-		if (!window.nodewebkit) {
-			// for whatever reason, Node-Webkit doesn't let us make remote
-			// Ajax requests or something. Oh well, making them direct
-			// isn't a problem, either.
-
-			try {
-				// I really hope this is a Chrome bug that this can fail
-				Storage.crossOriginFrame.postMessage("", Storage.origin);
-			} catch (e) {
-				return;
+			break;
+		case 't':
+			if (window.nodewebkit) return;
+			var oldTeams;
+			if (Storage.teams && Storage.teams.length) {
+				// Teams are still stored in the old location; merge them with the
+				// new teams.
+				oldTeams = Storage.teams;
 			}
+			Storage.loadPackedTeams(data.substr(1));
+			Storage.saveTeams = function () {
+				var packedTeams = Storage.packAllTeams(Storage.teams);
+				Storage.postCrossOriginMessage('T' + packedTeams);
 
-			$.get = function (uri, data, callback, type) {
-				var idx = Storage.crossOriginRequestCount++;
-				Storage.crossOriginRequests[idx] = callback;
-				Storage.postCrossOriginMessage('R' + JSON.stringify([uri, data, idx, type]));
+				// in Safari, cross-origin local storage is apparently treated as session
+				// storage, so mirror the storage in the current origin just in case
+				if (document.location.hostname === Config.origindomain) {
+					try {
+						localStorage.setItem('showdown_teams_local', packedTeams);
+					} catch (e) {
+					}
+				}
 			};
-			$.post = function (uri, data, callback, type) {
-				var idx = Storage.crossOriginRequestCount++;
-				Storage.crossOriginRequests[idx] = callback;
-				Storage.postCrossOriginMessage('S' + JSON.stringify([uri, data, idx, type]));
-			};
-		}
-		break;
-	case 'r':
-		var reqData = JSON.parse(data.slice(1));
-		var idx = reqData[0];
-		if (Storage.crossOriginRequests[idx]) {
-			Storage.crossOriginRequests[idx](reqData[1]);
-			delete Storage.crossOriginRequests[idx];
-		}
-		break;
+			if (oldTeams) {
+				Storage.teams = Storage.teams.concat(oldTeams);
+				Storage.saveTeams();
+				localStorage.removeItem('showdown_teams');
+			}
+			if (data === 'tnull' && !Storage.teams.length) {
+				Storage.loadPackedTeams(localStorage.getItem('showdown_teams_local'));
+			}
+			Storage.whenTeamsLoaded.load();
+			break;
+		case 'a':
+			if (data === 'a0') {
+				Storage.noThirdParty = true;
+				Storage.whenTeamsLoaded.load();
+				Storage.whenPrefsLoaded.load();
+			}
+			if (!window.nodewebkit) {
+				// for whatever reason, Node-Webkit doesn't let us make remote
+				// Ajax requests or something. Oh well, making them direct
+				// isn't a problem, either.
+
+				try {
+					// I really hope this is a Chrome bug that this can fail
+					Storage.crossOriginFrame.postMessage("", Storage.origin);
+				} catch (e) {
+					return;
+				}
+
+				$.get = function (uri, data, callback, type) {
+					var idx = Storage.crossOriginRequestCount++;
+					Storage.crossOriginRequests[idx] = callback;
+					Storage.postCrossOriginMessage('R' + JSON.stringify([uri, data, idx, type]));
+				};
+				$.post = function (uri, data, callback, type) {
+					var idx = Storage.crossOriginRequestCount++;
+					Storage.crossOriginRequests[idx] = callback;
+					Storage.postCrossOriginMessage('S' + JSON.stringify([uri, data, idx, type]));
+				};
+			}
+			break;
+		case 'r':
+			var reqData = JSON.parse(data.slice(1));
+			var idx = reqData[0];
+			if (Storage.crossOriginRequests[idx]) {
+				Storage.crossOriginRequests[idx](reqData[1]);
+				delete Storage.crossOriginRequests[idx];
+			}
+			break;
 	}
 };
 Storage.postCrossOriginMessage = function (data) {
@@ -513,7 +528,8 @@ Storage.loadTeams = function () {
 		if (window.localStorage) {
 			Storage.loadPackedTeams(localStorage.getItem('showdown_teams'));
 		}
-	} catch (e) {}
+	} catch (e) {
+	}
 };
 
 Storage.loadPackedTeams = function (buffer) {
@@ -548,7 +564,8 @@ Storage.getPackedTeams = function () {
 	var packedTeams = '';
 	try {
 		packedTeams = localStorage.getItem('showdown_teams');
-	} catch (e) {}
+	} catch (e) {
+	}
 	if (packedTeams) return packedTeams;
 	return Storage.packAllTeams(this.teams);
 };
@@ -565,7 +582,8 @@ Storage.saveAllTeams = function () {
 	this.saveTeams();
 };
 
-Storage.deleteAllTeams = function () {};
+Storage.deleteAllTeams = function () {
+};
 
 /*********************************************************
  * Team importing and exporting
@@ -605,7 +623,9 @@ Storage.unpackAllTeams = function (buffer) {
 			folder: line.slice(bracketIndex + 1, slashIndex > 0 ? slashIndex : bracketIndex + 1),
 			iconCache: ''
 		};
-	}).filter(function (v) { return v; });
+	}).filter(function (v) {
+		return v;
+	});
 };
 
 Storage.packAllTeams = function (teams) {
@@ -753,7 +773,12 @@ Storage.fastUnpackTeam = function (buf) {
 		j = buf.indexOf('|', i);
 		var ability = buf.substring(i, j);
 		var template = Tools.getTemplate(set.species);
-		set.ability = (template.abilities && ability in {'':1, 0:1, 1:1, H:1} ? template.abilities[ability || '0'] : ability);
+		set.ability = (template.abilities && ability in {
+			'': 1,
+			0: 1,
+			1: 1,
+			H: 1
+		} ? template.abilities[ability || '0'] : ability);
 		i = j + 1;
 
 		// moves
@@ -866,7 +891,12 @@ Storage.unpackTeam = function (buf) {
 		j = buf.indexOf('|', i);
 		var ability = Tools.getAbility(buf.substring(i, j)).name;
 		var template = Tools.getTemplate(set.species);
-		set.ability = (template.abilities && ability in {'':1, 0:1, 1:1, H:1} ? template.abilities[ability || '0'] : ability);
+		set.ability = (template.abilities && ability in {
+			'': 1,
+			0: 1,
+			1: 1,
+			H: 1
+		} ? template.abilities[ability || '0'] : ability);
 		i = j + 1;
 
 		// moves
@@ -1327,8 +1357,10 @@ Storage.initDirectory2 = function () {
 				if (err) return;
 				if (stats.isDirectory()) {
 					self.dir = self.documentsDir + 'My Games/Pokemon Showdown/';
-					fs.mkdir(self.dir + 'Logs', function () {});
-					fs.mkdir(self.dir + 'Teams', function () {});
+					fs.mkdir(self.dir + 'Logs', function () {
+					});
+					fs.mkdir(self.dir + 'Teams', function () {
+					});
 
 					// load teams
 					self.nwLoadTeams();
@@ -1518,7 +1550,8 @@ Storage.nwDeleteTeamFile = function (filename, callback) {
 	}
 	fs.unlink(this.dir + 'Teams/' + filename, function (err) {
 		var directory = filename.split('/').slice(0, -1).join('/');
-		fs.rmdir(directory, function () {});
+		fs.rmdir(directory, function () {
+		});
 
 		self.nwTeamsLeft--;
 		if (!self.nwTeamsLeft) {
@@ -1541,7 +1574,8 @@ Storage.nwSaveTeam = function (team) {
 	var filename = folder + '/' + splitFilename[splitFilename.length - 1];
 	try {
 		fs.mkdirSync(this.dir + 'Teams/' + folder);
-	} catch (e) {}
+	} catch (e) {
+	}
 
 	if (team.filename && filename !== team.filename) {
 		this.nwDeleteTeam(team);
@@ -1554,7 +1588,8 @@ Storage.nwSaveTeams = function () {
 	// should never happen
 	try {
 		console.log("nwSaveTeams called: " + new Error().stack);
-	} catch (e) {}
+	} catch (e) {
+	}
 };
 
 Storage.nwDeleteTeam = function (team) {
@@ -1563,7 +1598,8 @@ Storage.nwDeleteTeam = function (team) {
 		var oldDirectory = oldFilename.split('/').slice(0, -1).join('/');
 		if (oldDirectory) oldDirectory = this.dir + 'Teams/' + oldDirectory;
 		fs.unlink(this.dir + 'Teams/' + oldFilename, function () {
-			if (oldDirectory) fs.rmdir(oldDirectory, function () {});
+			if (oldDirectory) fs.rmdir(oldDirectory, function () {
+			});
 		});
 	}
 };
@@ -1652,8 +1688,11 @@ Storage.nwLogChat = function (roomid, line) {
 
 // saving
 
-Storage.startLoggingChat = function () {};
-Storage.stopLoggingChat = function () {};
-Storage.logChat = function () {};
+Storage.startLoggingChat = function () {
+};
+Storage.stopLoggingChat = function () {
+};
+Storage.logChat = function () {
+};
 
 Storage.initialize();

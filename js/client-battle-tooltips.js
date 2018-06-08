@@ -392,34 +392,38 @@ var BattleTooltips = (function () {
 	BattleTooltips.prototype.showPokemonTooltip = function (pokemon, pokemonData, isActive, theirActive) {
 		var text = '';
 		var gender = pokemon.gender;
-		var speedChar = '';
-		if (Tools.prefs('speedcheck') && pokemonData) {
-			var psuedoWeather = room.battle.pseudoWeather;
-			var isTrickRoom = false;
-			for(var i = 0; i<psuedoWeather.length; i++)
-				if(psuedoWeather[i][0] === "Trick Room")
-					isTrickRoom = true;
-			var theirSpeed = this.getTemplateMaxSpeed(Tools.getTemplate(theirActive.species), theirActive.level);
-			if(theirActive.boosts["spe"]) {
-				theirSpeed *= 1 + (theirActive.boosts["spe"] / 2);
+		try {
+			var speedChar = '';
+			if (Tools.prefs('speedcheck') && pokemonData) {
+				var psuedoWeather = room.battle.pseudoWeather;
+				var isTrickRoom = false;
+				for (var i = 0; i < psuedoWeather.length; i++)
+					if (psuedoWeather[i][0] === "Trick Room")
+						isTrickRoom = true;
+				var theirSpeed = this.getTemplateMaxSpeed(Tools.getTemplate(theirActive.species), theirActive.level);
+				if (theirActive.boosts["spe"]) {
+					theirSpeed *= 1 + (theirActive.boosts["spe"] / 2);
+				}
+				if (theirActive.item.name == "Choice Scarf") {
+					theirSpeed *= 1.5;
+				}
+				var mySpeed = this.calculateModifiedStats(pokemon, pokemonData)["spe"];
+				if (this.room.battle.p1.sideConditions["tailwind"] != undefined) {
+					theirSpeed *= 2;
+				}
+				if (this.room.battle.p2.sideConditions["tailwind"] != undefined) {
+					mySpeed *= 2;
+				}
+				if (mySpeed > theirSpeed) {
+					speedChar = isTrickRoom ? '&#9660;' : '&#9650;';
+				} else if (mySpeed == theirSpeed) {
+					speedChar = '&#61';
+				} else {
+					speedChar = isTrickRoom ? '&#9650;' : '&#9660;';
+				}
 			}
-			if (theirActive.item.name == "Choice Scarf") {
-				theirSpeed *= 1.5;
-			}
-			var mySpeed = this.calculateModifiedStats(pokemon, pokemonData)["spe"];
-			if (this.room.battle.p1.sideConditions["tailwind"] != undefined ) {
-				theirSpeed *= 2;
-			}
-			if (this.room.battle.p2.sideConditions["tailwind"] != undefined ) {
-				mySpeed *= 2;
-			}
-			if (mySpeed > theirSpeed) {
-				speedChar = isTrickRoom?'&#9660;':'&#9650;';
-			} else if (mySpeed == theirSpeed) {
-				speedChar = '&#61';
-			} else {
-				speedChar = isTrickRoom?'&#9650;':'&#9660;';
-			}
+		}catch (err){
+			console.error(err);
 		}
 		var warnText = "";
 		if(Tools.prefs('opponentcheck')) {

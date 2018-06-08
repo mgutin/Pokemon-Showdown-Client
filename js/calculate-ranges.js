@@ -3,6 +3,7 @@ var abilities, items, STATS, calcHP, calcStat, calculateAllMoves, damageResults;
 var resultLocations = [[], []];
 
 function calculate(room, pokemonDefender, moveName, notActivePokemon) {
+	// getAction();
 	if (room === "" || pokemonDefender === "")
 		return null;
 	room = jQuery.extend(true, {}, room);
@@ -11,6 +12,11 @@ function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 		notActivePokemon = jQuery.extend(true, {}, notActivePokemon);
 
 	var allPokemon = room.myPokemon;
+	if(notActivePokemon){
+		for(var i = 0; i<room.myPokemon.length; i++)
+			if(room.myPokemon[i].searchid === notActivePokemon.searchid)
+				notActivePokemon = jQuery.extend(true, {}, room.myPokemon[i]);
+	}
 	var pokemonAttacker = notActivePokemon;
 	if (notActivePokemon === undefined)
 		for (var i = 0; i < allPokemon.length; i++)
@@ -18,35 +24,7 @@ function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 				pokemonAttacker = allPokemon[i];
 				break;
 			}
-	var field = new Field();
-	//p1 is opponent
-	var sideConditionsO = room.battle.p1.sideConditions;
-	if (sideConditionsO["reflect"] !== undefined)//lightscreen
-		field.isReflect = [field.isReflect[0],true];
-	if (sideConditionsO["lightscreen"] !== undefined)
-		field.isReflect = [field.isReflect[0],true];
-	if (sideConditionsO["tailwind"] !== undefined)
-		pokemonDefender.doubleSpeed = true;
-	var sideConditionsY = room.battle.p2.sideConditions;
-	if (sideConditionsY["reflect"] !== undefined)
-		field.isReflect = [true,field.isReflect[1]];
-	if (sideConditionsY["tailwind"] !== undefined)
-		pokemonAttacker.doubleSpeed = true;
-	if (sideConditionsY["lightscreen"] !== undefined)
-		field.isReflect = [true,field.isReflect[1]];
-
-	//TODO weather, Sun, Harsh Sunshine, Hail
-	field.weather = weather(room.battle.weather);
-	// if (room.battle.weather.includes("rain"))
-	// 	field.weather = ['Rain'];
-	// if (room.battle.weather.includes("sand"))
-	// 	field.weather = ['Sand'];
-	//TODO terain, field.terrain = "Grassy"
-	var psuedoWeather = room.battle.pseudoWeather;
-	var isTrickRoom = false;
-	for(var i = 0; i<psuedoWeather.length; i++)
-		if(psuedoWeather[i][0] === "Trick Room")
-			isTrickRoom = true;
+	var field = getField();
 	//your pokemon
 	pokemonAttacker.boosts = {};
 	var attacker = room.battle.p2, defender = room.battle.p1;//room.battle.p2.id === pokemonDefender.id ? room.battle.p1 : room.battle.p2;
@@ -56,12 +34,12 @@ function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 	}
 	if(attacker.active[0] !== null && attacker.active[0].boosts !== undefined)
 		pokemonAttacker.boosts = attacker.active[0].boosts;
-	this.attacker = new POKEMONValue(jQuery.extend(true, {}, pokemonAttacker));
+	this.attacker = new POKEMONValue(pokemonAttacker);
 	//opponent pokemon
 	pokemonDefender.boosts = {};
 	if(defender.active[0] !== null && defender.active[0].boosts !== undefined)
 		pokemonDefender.boosts = defender.active[0].boosts;
-	this.defender = new POKEMONValue(jQuery.extend(true, {}, pokemonDefender.active[0]));
+	this.defender = new POKEMONValue(pokemonDefender.active[0]);
 	var damage = calculateDamage(this.attacker, this.defender, field);
 	var d = 0;
 	var ar = damage[1];
@@ -102,6 +80,41 @@ function calculate(room, pokemonDefender, moveName, notActivePokemon) {
 		return "";
 	return d;
 }
+function getField() {
+	this.speedBoost = -1;
+	var field = new Field();
+	//p1 is opponent
+	var sideConditionsO = room.battle.p1.sideConditions;
+	if (sideConditionsO["reflect"] !== undefined)//lightscreen
+		field.isReflect = [field.isReflect[0],true];
+	if (sideConditionsO["lightscreen"] !== undefined)
+		field.isReflect = [field.isReflect[0],true];
+	if (sideConditionsO["tailwind"] !== undefined)
+		this.speedBoost = 1;
+	var sideConditionsY = room.battle.p2.sideConditions;
+	if (sideConditionsY["reflect"] !== undefined)
+		field.isReflect = [true,field.isReflect[1]];
+	if (sideConditionsY["tailwind"] !== undefined)
+		this.speedBoost = 0;
+	if (sideConditionsY["lightscreen"] !== undefined)
+		field.isReflect = [true,field.isReflect[1]];
+
+	//TODO weather, Sun, Harsh Sunshine, Hail
+	field.weather = weather(room.battle.weather);
+	// if (room.battle.weather.includes("rain"))
+	// 	field.weather = ['Rain'];
+	// if (room.battle.weather.includes("sand"))
+	// 	field.weather = ['Sand'];
+	//TODO terain, field.terrain = "Grassy"
+	var psuedoWeather = room.battle.pseudoWeather;
+	var isTrickRoom = false;
+	for(var i = 0; i<psuedoWeather.length; i++)
+		if(psuedoWeather[i][0] === "Trick Room")
+			isTrickRoom = true;
+	field.isTrickRoom = true;
+	return field;
+}
+
 function weather(weatherValue) {
 	var weatherTable = {
 		sunnyday: {
@@ -178,11 +191,17 @@ function getWarnMessage(room, pokemonDefender, notActivePokemon) {
 	return "opponent: "+best;
 }
 function POKEMONValue(pMon) {
+	pMon = jQuery.extend(true, {}, pMon);
 	setGeneration(gen);
-	var isYourMon = pMon.stats === undefined || pMon.stats.length > 0;
-	var isMega = !!($('input[name=megaevo]')[0] || '').checked;
+	var isYourMon = pMon.stats !== undefined && pMon.stats.atk !== undefined;
+	// var isMega = !!($('input[name=megaevo]')[0] || '').checked;
+	var isMega = pMon.item.endsWith("tite"); //I'll just assume you won't wait to perform mega evolution
 	this.mon = pMon;
 	this.name = pMon.baseSpecies === undefined ? pMon.species : pMon.baseSpecies;
+	if(this.name === "Meowstic")
+		this.name+="-"+pMon.gender;
+	if(this.name === "Aegislash")
+		this.name+="-Blade";
 	if(pMon.species !== undefined && pMon.species.includes("-Mega"))
 		this.name = pMon.species;
 	if(isYourMon && isMega && !this.name.includes("Mega"))
@@ -195,7 +214,7 @@ function POKEMONValue(pMon) {
 			this.name = pMon.name;
 			this.set = setdex[this.name];
 		}else if (pMon.species.includes("-")) {
-			var name = pMon.replace(/-.*/,"");
+			var name = pMon.species.replace(/-.*/,"");
 			this.pokemon = pokedex[name];
 			this.name = name;
 			this.set = setdex[name];
@@ -215,6 +234,8 @@ function POKEMONValue(pMon) {
 			m.push(moveTrack[i][0]);
 	}
 	this.moves = pMon.moves === undefined || pMon.moves.length === 0 ? m : pMon.moves;
+	if(this.item.includes("choice") && (room.battle.p1.lastPokemon === null || room.battle.p1.lastPokemon.species === pMon.species))//room.battle.p1.lastPokemon
+		this.moves = [pMon.lastMove];
 	this.stats = pMon.stats;
 	this.boosts = pMon.boosts;
 	if(this.name === "Ditto") {
@@ -227,21 +248,26 @@ function POKEMONValue(pMon) {
 			this.mon.baseStats.hp = hp;
 		}
 	}
+	function fixStats(stats) {
+		if(!stats.length)
+			return {};
+		for (var key in stats) {
+			if (key === "spd")//spd is not speed it's special defense
+				stats["sd"] = stats[key];
+			else if (key === "def")
+				stats["df"] = stats[key];
+			else if (key === "spa")
+				stats["sa"] = stats[key];
+			else
+				stats[key.substr(0, 2)] = stats[key];
+			//then remove key
+			delete stats[key];
+		}
+	}
 
 	this.oldBoosts = this.boosts;
 	if (this.boosts !== undefined)
-		for (var key in this.boosts) {
-			if (key === "spd")//spd is not speed it's special defense
-				this.boosts["sd"] = this.boosts[key];
-			else if (key === "def")
-				this.boosts["df"] = this.boosts[key];
-			else if (key === "spa")
-				this.boosts["sa"] = this.boosts[key];
-			else
-				this.boosts[key.substr(0, 2)] = this.boosts[key];
-			//then remove key
-			delete this.boosts[key];
-		}
+		this.boosts = fixStats(this.oldBoosts);
 	this.getPossibleAbilities = function () {
 		if (this.ability !== undefined || this.ability !== "")
 			return [this.ability];
@@ -276,8 +302,8 @@ function POKEMONValue(pMon) {
 	// 	types = pMon.types;
 	this.type1 = types[0];
 	this.type2 = (types[1] && types[1] !== "undefined") ? types[1] : "";
-	this.rawStats = [];
-	this.stats = [];
+	this.rawStats = pMon.stats ? fixStats(pMon.stats) : [];
+	this.stats = pMon.stats ? fixStats(pMon.stats) : [];
 	this.evs = [];
 	try {
 		this.curSet = this.set[Object.keys(this.set)[0]];
@@ -305,7 +331,7 @@ function POKEMONValue(pMon) {
 		this.maxHP = ~~((this.pokemon.bs.hp * 2 + HPIVs + ~~(this.HPEVs / 4)) * this.level / 100) + this.level + 10;
 	}
 	if(pMon.stats === undefined || pMon.stats.length > 0)
-		this.curHP = this.maxHP*pMon.hp/pMon.maxHP;
+		this.curHP = this.maxHP*pMon.hp/(pMon.maxHP === undefined ? pMon.maxhp : pMon.maxhp);
 	else {
 		this.curHP = this.hp;
 		this.hp = this.curHP/this.maxHP*100;//needs to be a percent
@@ -334,7 +360,7 @@ function POKEMONValue(pMon) {
 	this.status = statuses(pMon.status);
 	this.toxicCounter = 0;
 	this.mymoves = [];
-	if (this.moves !== undefined) {
+	if (this.moves !== undefined && !this.item.includes("choice")) {
 		var i = 0;
 		while (this.moves.length < 4)
 			this.moves.push(this.curSet.moves[i++]);
@@ -351,7 +377,7 @@ function POKEMONValue(pMon) {
 			category: defaultDetails.category,
 			isCrit: !!defaultDetails.alwaysCrit,
 			hits: defaultDetails.isMultiHit ? ((this.ability === "Skill Link" || this.item === "Grip Claw") ? 5 : 3) : defaultDetails.isTwoHit ? 2 : 1,
-			usedTimes: defaultDetails.usedTimes
+			usedTimes: defaultDetails.usedTimes ? defaultDetails.usedTimes : 1
 		}));
 		this.weight = this.pokemon.w;
 		this.gender = this.pokemon.gender ? "genderless" : "Male";
@@ -396,6 +422,7 @@ function calculateDamage(pokemonLeft, pokemonRight, field) {
 	var p1 = pokemonLeft;//new Pokemon($("#p1"));
 	var p2 = pokemonRight;//new Pokemon($("#p2"));
 	var battling = [p1, p2];
+	var notation = "%";
 	p1.maxDamages = [];
 	p2.maxDamages = [];
 	damageResults = calculateAllMoves(p1, p2, field);
@@ -472,6 +499,8 @@ function calculateDamage(pokemonLeft, pokemonRight, field) {
 		} else if (p1.mymoves[i].hasRecoil) {
 			recoilText = ' (50% recoil damage)';
 		}
+		result.recoilText = recoilText;
+		result.recoveryText = recoveryText;
 		resultLocations[0][i] = {};
 		if (p1.mymoves[i].name !== undefined)
 			resultLocations[0][i].move = p1.mymoves[i].name.replace("Hidden Power", "HP");
@@ -545,10 +574,15 @@ function calculateDamage(pokemonLeft, pokemonRight, field) {
 		} else if (p2.mymoves[i].hasRecoil) {
 			recoilText = ' (50% recoil damage)';
 		}
+		result.recoilText = recoilText;
+		result.recoveryText = recoveryText;
 		var bestMove;
 		resultLocations[1][i] = {};
 		resultLocations[1][i].move = p2.mymoves[i].name.replace("Hidden Power", "HP");
 		resultLocations[1][i].damage = minDisplay + " - " + maxDisplay + notation + recoveryText + recoilText;
+		resultLocations[1][i].recoilText = recoilText;
+		resultLocations[1][i].recoveryText = recoveryText;
+		// damageResults[0][i].resultLocations = resultLocations;
 		if (fastestSide === "tie") {
 			battling.sort(function () {
 				return 0.5 - Math.random();
@@ -565,6 +599,25 @@ function calculateDamage(pokemonLeft, pokemonRight, field) {
 	// bestResult.change();
 	// $("#resultHeaderL").text(p1.name + "'s Moves (select one to show detailed results)");
 	// $("#resultHeaderR").text(p2.name + "'s Moves (select one to show detailed results)");
+	for (var j = 0; j < damageResults.length; j++) {
+		for (var i = 0; i < damageResults[j].length; i++) {
+			var pp1 = p1, pp2 = p2;
+			if(j === 0){
+				pp1 = p2;
+				pp2 = p1;
+			}
+			var defenderHp = pp1.maxHP * pp1.hp / 100;
+			var dam = damageResults[j][i].damageText.replace(/ (.*)/, "").split("-");
+			var d1 = Math.round(dam[0] / defenderHp * 100), d2 = Math.round(dam[1] / defenderHp * 100);
+			damageResults[j][i].d1 = d1;
+			damageResults[j][i].d2 = d2;
+			var moves = pp2.moves;
+			if (moves.length === 0)
+				moves = pp2.set[Object.keys(pp2.set)[0]].moves;
+			damageResults[j][i].moveName = moves[i];
+		}
+	}
+	damageResults.fastestSide = fastestSide;
 	return damageResults;
 }
 

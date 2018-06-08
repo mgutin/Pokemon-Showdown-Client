@@ -1784,6 +1784,7 @@ var SETDEX_SM = {
 		"Monotype Assault Vest (Psychic)": {"level": 100, "evs": {"hp": 72, "sp": 184, "sa": 252}, "nature": "Timid", "ability": "Serene Grace", "item": "Assault Vest", "moves": ["Psyshock", "Shadow Ball", "Focus Blast", "U-turn"]},
 	},
 	"Meloetta-Pirouette": {
+		"RU Offensive Calm Mind": {"level": 100, "evs": {"sa":252,"sp":252,"sd":4},"nature": "Timid", "ability":"Serene Grace", "item": "Fightinium Z", "movesv": ["Calm Mind","Psychic","Focus Blast","Shadow Ball"]}
 	},
 	"Meowstic": {
 		"PU Showdown Usage": {"level": 100, "evs": {"sd": 4, "hp": 252, "sp": 252}, "nature": "Timid", "ability": "Competitive", "item": "Chesto Berry", "moves": ["Calm Mind", "Barrier", "Stored Power", "Rest"]},

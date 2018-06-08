@@ -876,9 +876,17 @@
 					}
 				}
 
+				var warnText = "";
+				if(Tools.prefs('opponentcheck')) {
+					try {
+						warnText = '<br /><small>' + getWarnMessage(this.room, this.battle.yourSide, battlePokemon === null || battlePokemon === undefined ? pokemonData : battlePokemon) + '</small>';
+					} catch (err) {
+						console.error(err);
+					}
+				}
 				// Move chooser
 				var hpBar = '<small class="' + (hpRatio < 0.2 ? 'critical' : hpRatio < 0.5 ? 'weak' : 'healthy') + '">HP ' + switchables[pos].hp + '/' + switchables[pos].maxhp + '</small>';
-				requestTitle += ' What will <strong>' + speedChar + Tools.escapeHTML(switchables[pos].name) + '</strong> do? ' + hpBar + ' ' + getWarnMessage(room, this.battle.yourSide);
+				requestTitle += ' What will <strong>' + speedChar + Tools.escapeHTML(switchables[pos].name) + '</strong> do? ' + hpBar + ' ' + warnText;
 
 				var hasMoves = false;
 				var moveMenu = '';
