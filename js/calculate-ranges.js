@@ -193,7 +193,7 @@ function getWarnMessage(room, pokemonDefender, notActivePokemon) {
 function POKEMONValue(pMon) {
 	pMon = jQuery.extend(true, {}, pMon);
 	setGeneration(gen);
-	var isYourMon = pMon.stats !== undefined && pMon.stats.atk !== undefined;
+	var isYourMon = pMon.stats !== undefined && pMon.stats.atk !== undefined && pMon.condition !== "0 fnt";
 	// var isMega = !!($('input[name=megaevo]')[0] || '').checked;
 	var isMega = pMon.item.endsWith("tite"); //I'll just assume you won't wait to perform mega evolution
 	this.mon = pMon;
@@ -234,8 +234,32 @@ function POKEMONValue(pMon) {
 			m.push(moveTrack[i][0]);
 	}
 	this.moves = pMon.moves === undefined || pMon.moves.length === 0 ? m : pMon.moves;
-	if(this.item.includes("choice") && (room.battle.p1.lastPokemon === null || room.battle.p1.lastPokemon.species === pMon.species))//room.battle.p1.lastPokemon
-		this.moves = [pMon.lastMove];
+
+	/*
+	//for out of pp
+	if(isYourMon && pMon.active){
+		var mmm = room.request.active[0].moves;
+		var vmsm = [];
+		for(var i = 0; i<mmm.length; i++)
+			if(mmm[i].pp > 0)
+				vmsm.push(mmm[i].id);
+		this.moves = vmsm;
+
+	// if(isYourMon && this.item.includes("choice") && pMon.lastMove && room.battle.lastMove === pMon.lastMove)//(room.battle.p1.lastPokemon === null || room.battle.p1.lastPokemon.species === pMon.species))//room.battle.p1.lastPokemon
+	// 	this.moves = [pMon.lastMove];
+	//TODO if outrage was last move then that's the only move possible ....
+	// if(this.)
+	}
+	 */
+	if(isYourMon && pMon.active){
+		var v = room.request.active[0].moves;
+		var mdsjklf = [];
+		for(var i = 0; i<v.length; i++)
+			if(!v[i].disabled)
+				mdsjklf.push(v[i].id);
+		this.moves = mdsjklf;
+	}
+
 	this.stats = pMon.stats;
 	this.boosts = pMon.boosts;
 	if(this.name === "Ditto") {

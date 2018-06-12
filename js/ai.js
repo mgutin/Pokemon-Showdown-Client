@@ -43,7 +43,7 @@ function getAction() {
 			y = 1;
 			z = 2;
 		}
-		return 100/(z*myBest.d1) - 100/(y*opsBest.d1+(isSwitchIn?vv.d1:0)*1.5);
+		return 100/(z*myBest.d1) - 100/(y*opsBest.d1+(isSwitchIn?vv.d1:0)*2);
 	}
 	//TODO room.battle.p1.pokemon  get's all known opponent's pokemon
 	//TODO on switch in have first move not best, but best against active mon
