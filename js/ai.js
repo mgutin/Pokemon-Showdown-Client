@@ -29,6 +29,7 @@ function getAction() {
 	function checker(opsBest,myBest,faster,isSwitchIn,vv) {
 		//faster 0 is you 1 is ops TIE is tie
 		//Opponent will kill you on switch in
+		/*
 		if(isSwitchIn && opsBest.d1 > 100)
 			return 1e6;
 		if(faster === 0 && myBest.d1 > 100) {
@@ -38,46 +39,58 @@ function getAction() {
 			//you're faster and you can kill it, but you'll take damage
 			return -1e6+opsBest.d1;
 		}
-		var z = 1, y = 2;
+		*/
+		//default you're slower, so tie means i'll assume you're slower
+		var s1 = 1, s2 = 0;
 		if(faster === 0){
-			y = 1;
-			z = 2;
+			s1 = 0;
+			s2 = 1;
 		}
-		return 100/(z*myBest.d1) - 100/(y*opsBest.d1+(isSwitchIn?vv.d1:0)*2);
+		//TODO add (status damage, status percent, hit chance percent) weighted
+		//damage is calculated based off current health, so 10% isn't 10% of 100% it's 10% of current health
+		//d1 is the lowest range for the move
+		return Math.ceil(100/myBest.d1)-s2  //your turns to win
+					- Math.ceil((100-(isSwitchIn?vv.d1:0))/opsBest.d1)-s1 //opponents turns to win
+		// return 100/(z*myBest.d1) - 100/(y*opsBest.d1+(isSwitchIn?vv.d1:0)*2);
 	}
 	//TODO room.battle.p1.pokemon  get's all known opponent's pokemon
 	//TODO on switch in have first move not best, but best against active mon
-	//TODO choice items lock in your move to the same one
 	//TODO status like frozen
 	var allpokemon = new AllPokemon();
 	var active = allpokemon.getActivePokemon();
-	var vv = 0;
-	if(active) {
-		vv = getBestMove(active, 1);
-		var m = getBestMove(active);
-		var dps = checker(vv, m, active.speed);
-		if (dps < 0)
-			return {
-				description: active.myMon.name + ": " + Tools.getMove(m.moveName).name,
-				mon: active,
-				move: getBestMove(active),
-				dps: dps
-			};
-	}
+	var vv = active ? getBestMove(active, 1) : {d1:0};
+	// if(active) {
+	// 	vv = getBestMove(active, 1);
+	// 	var m = getBestMove(active);
+	// 	var dps = checker(vv, m, active.speed);
+	// 	if (dps < 0)
+	// 		return {
+	// 			description: active.myMon.name + ": " + Tools.getMove(m.moveName).name,
+	// 			mon: active,
+	// 			move: getBestMove(active),
+	// 			dps: dps
+	// 		};
+	// }
 	var bestBench = [];
 	for(var i = 0; i<allpokemon.allDamage.length; i++){
 		var m = getBestMove(allpokemon.allDamage[i]);
 		bestBench.push({
 			description: allpokemon.allDamage[i].myMon.name+": "+Tools.getMove(m.moveName).name,
 			mon: allpokemon.allDamage[i],
-			dps: checker(getBestMove(allpokemon.allDamage[i],1),m,allpokemon.allDamage[i].speed,active !== undefined,vv),
+			dps: checker(getBestMove(allpokemon.allDamage[i],1),m,allpokemon.allDamage[i].speed,!allpokemon.allDamage[i].myMon.mon.active,vv),
 			move: m
 		});
 	}
 	bestBench.sort(function (a,b) {
 		return a.dps - b.dps;
 	});
-	return bestBench[0];
+	var bestest = [];
+	var bestValue = bestBench[0].dps;
+	for(var i = 0; i<bestBench.length; i++)
+		if(bestBench[i].dps === bestValue)
+			bestest.push(bestBench[i]);
+
+	return bestest[Math.floor(Math.random()*bestest.length)];;
 }
 
 function AllPokemon(opponentMon) {

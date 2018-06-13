@@ -235,23 +235,8 @@ function POKEMONValue(pMon) {
 	}
 	this.moves = pMon.moves === undefined || pMon.moves.length === 0 ? m : pMon.moves;
 
-	/*
-	//for out of pp
-	if(isYourMon && pMon.active){
-		var mmm = room.request.active[0].moves;
-		var vmsm = [];
-		for(var i = 0; i<mmm.length; i++)
-			if(mmm[i].pp > 0)
-				vmsm.push(mmm[i].id);
-		this.moves = vmsm;
-
-	// if(isYourMon && this.item.includes("choice") && pMon.lastMove && room.battle.lastMove === pMon.lastMove)//(room.battle.p1.lastPokemon === null || room.battle.p1.lastPokemon.species === pMon.species))//room.battle.p1.lastPokemon
-	// 	this.moves = [pMon.lastMove];
-	//TODO if outrage was last move then that's the only move possible ....
-	// if(this.)
-	}
-	 */
-	if(isYourMon && pMon.active){
+	//only do moves that aren't disabled
+	if(isYourMon && pMon.active && room.request.active){
 		var v = room.request.active[0].moves;
 		var mdsjklf = [];
 		for(var i = 0; i<v.length; i++)
