@@ -28,18 +28,6 @@ function getAction() {
 	//opsBest and myBest is bestMoves' damage[0|1].d1
 	function checker(opsBest,myBest,faster,isSwitchIn,vv) {
 		//faster 0 is you 1 is ops TIE is tie
-		//Opponent will kill you on switch in
-		/*
-		if(isSwitchIn && opsBest.d1 > 100)
-			return 1e6;
-		if(faster === 0 && myBest.d1 > 100) {
-			//you're faster and you're active just kill it
-			if(!isSwitchIn)
-				return -1e6;
-			//you're faster and you can kill it, but you'll take damage
-			return -1e6+opsBest.d1;
-		}
-		*/
 		//default you're slower, so tie means i'll assume you're slower
 		var s1 = 1, s2 = 0;
 		if(faster === 0){
@@ -49,8 +37,13 @@ function getAction() {
 		//TODO add (status damage, status percent, hit chance percent) weighted
 		//damage is calculated based off current health, so 10% isn't 10% of 100% it's 10% of current health
 		//d1 is the lowest range for the move
-		return Math.ceil(100/myBest.d1)-s2  //your turns to win
-					- Math.ceil((100-(isSwitchIn?vv.d1:0))/opsBest.d1)-s1 //opponents turns to win
+		var mm = myBest.d1, ym = opsBest.d1;
+		if(mm === 0)
+			mm = 1e-9;
+		if(ym === 0)
+			ym = 1e-9;
+		return Math.ceil(100/mm)-s2  //your turns to win
+					- Math.ceil((100-(isSwitchIn?vv.d1:0))/ym)-s1 //opponents turns to win
 		// return 100/(z*myBest.d1) - 100/(y*opsBest.d1+(isSwitchIn?vv.d1:0)*2);
 	}
 	//TODO room.battle.p1.pokemon  get's all known opponent's pokemon
@@ -59,18 +52,6 @@ function getAction() {
 	var allpokemon = new AllPokemon();
 	var active = allpokemon.getActivePokemon();
 	var vv = active ? getBestMove(active, 1) : {d1:0};
-	// if(active) {
-	// 	vv = getBestMove(active, 1);
-	// 	var m = getBestMove(active);
-	// 	var dps = checker(vv, m, active.speed);
-	// 	if (dps < 0)
-	// 		return {
-	// 			description: active.myMon.name + ": " + Tools.getMove(m.moveName).name,
-	// 			mon: active,
-	// 			move: getBestMove(active),
-	// 			dps: dps
-	// 		};
-	// }
 	var bestBench = [];
 	for(var i = 0; i<allpokemon.allDamage.length; i++){
 		var m = getBestMove(allpokemon.allDamage[i]);
